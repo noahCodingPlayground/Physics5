@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game library - Physics5</title>
+    <link rel="icon" href="../resources/main1.png">
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <style>
+        body{
+            font-family: system-ui;
+            align-items: center;
+            flex-direction: column;
+            display: flex;
+            margin:0;
+            background: #0f0f12;
+        }
+        canvas{
+            position:fixed;
+            top:0;
+            left:0;
+            z-index:-1;
+        }
+        .nav-bar{
+            margin-top: 15px;
+            width:50%;
+            min-width: 350px;
+            background-color: rgba(25,25,25,0.6);
+            border-radius: 8px;
+            height:6vh;
+            min-height: 45px;
+            max-height: 200px;
+            display:flex;
+            border:1px solid rgba(31, 255, 105, 0.5);
+        }
+        .nav-bar .title{
+            color:rgb(235,235,235);
+            font-size: 25px;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            height:100%;
+            font-family: monospace;
+            left:50%;
+            position:relative;
+            transform:translateX(-50%);
+        }
+        .nav-bar img{
+            height:90%;
+            aspect-ratio: 1/1;
+            left:0%;
+            position:relative;
+            justify-content: center;
+            align-items: center;
+            margin-left:5px;
+            margin-top: 5px;
+        }
+        .nav-bar .btn-container{
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap:8px;
+            margin-right: 15px;
+            margin-left:auto;
+            box-sizing: border-box;
+            position:relative;
+            width:40%;
+            height: 100%;
+        }
+        .nav-btn{
+            height:55%;
+            color:rgb(235,235,235);
+            background-color: rgb(35,35,35);
+            width:125px;
+            font-family: monospace;
+            font-size: 20px;
+            align-items: center;
+            justify-content: center;
+            display:flex;
+            border-radius: 5px;
+            transition: 0.25s ease;
+            border:1px solid rgba(0,0,0,0)
+        }
+        .nav-btn:hover{
+            color:rgb(60, 218, 81);
+            border-color: rgba(59, 219, 80, 0.5);
+        }
+        .card-container{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:10px;
+            flex-wrap: wrap;
+            width:90%;
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .game-card{
+            width: 15%;
+            aspect-ratio: 1/1;
+            border-radius: 5px;
+            background-color: rgb(35,35,35);
+            transition: 0.25s ease;
+            will-change: transform;
+            border:1px solid rgba(0,0,0,0);
+            position:relative;
+        }
+        .game-card img{
+            object-fit: cover;
+            width:100%;
+            height:100%;
+            box-sizing: border-box;
+            position:absolute;
+            border-radius: 5px;
+        }
+        .game-card .title{
+            width:100%;
+            padding:10px;
+            background-color: rgba(25,25,25,0.5);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            position:absolute;
+            opacity: 1;
+            color:rgb(235,235,235);
+            object-fit: cover;
+            box-sizing: border-box;
+            opacity:0;
+            transition:0.25s ease;
+            bottom:0;
+            font-size: 15px;
+        }
+        .game-card:hover{
+            transform:scale(1.02);
+            border-color:rgba(31, 255, 105, 0.8);
+        }
+        .game-card:hover .title{
+            opacity:1;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div id="navBar"class="nav-bar">
+    <img src="../resources/main1.png">
+    <div id="navTitle"class="title">Physics5</div>
+    <div class="btn-container">
+        <div id="home"class="nav-btn">Home</div>
+        <div id="games"class="nav-btn">Games</div>
+    </div>
+</div>
+<div class="card-container">
+    <div id="1v1.LOL"class="game-card">
+        <img src="../library/games/1v1.LOL/thumbnail.png">
+        <div class="title">1v1.LOL</div>
+    </div>
+    <div id="60 Seconds Burger Run"class="game-card">
+        <img src="../library/games/60 Seconds Burger Run/thumbnail.png">
+        <div class="title">60 Seconds Burger Run</div>
+    </div>
+    <div id="99 Balls"class="game-card">
+        <img src="../library/games/99 Balls/thumbnail.png">
+        <div class="title">99 Balls</div>
+    </div>
+    <div id="2048 Puzzle"class="game-card">
+        <img src="../library/games/2048 Puzzle/thumbnail.png">
+        <div class="title">2048 Puzzle</div>
+    </div>
+    <div id="Achievement Unlocked"class="game-card">
+        <img src="../library/games/Achievement Unlocked/thumbnail.png">
+        <div class="title">Achievement Unlocked</div>
+    </div>
+    <div id="Agar.io"class="game-card">
+        <img src="../library/games/Agar.io/thumbnail.png">
+        <div class="title">Agar.io</div>
+    </div>
+    <div id="Among Us"class="game-card">
+        <img src="../library/games/Among Us/thumbnail.png">
+        <div class="title">Among Us</div>
+    </div>
+    <div id="aquapark.io"class="game-card">
+        <img src="../library/games/aquapark.io/thumbnail.png">
+        <div class="title">aquapark.io</div>
+    </div>
+    <div id="Avalanche"class="game-card">
+        <img src="../library/games/Avalanche/thumbnail.png">
+        <div class="title">Avalanche</div>
+    </div>
+    <div id="Awesome Tanks 2"class="game-card">
+        <img src="../library/games/Awesome Tanks 2/thumbnail.png">
+        <div class="title">Awesome Tanks 2</div>
+    </div>
+    <div id="Bad Ice Cream"class="game-card">
+        <img src="../library/games/Bad Ice Cream/thumbnail.png">
+        <div class="title">Bad Ice Cream</div>
+    </div>
+    <div id="Bank Robbery"class="game-card">
+        <img src="../library/games/Bank Robbery/thumbnail.png">
+        <div class="title">Bank Robbery</div>
+    </div>
+    <div id="Basket Random"class="game-card">
+        <img src="../library/games/Basket Random/thumbnail.png">
+        <div class="title">Basket Random</div>
+    </div>
+    <div id="Basketball Legends 2020"class="game-card">
+        <img src="../library/games/Basketball Legends 2020/thumbnail.png">
+        <div class="title">Basketball Legends 2020</div>
+    </div>
+    <div id="Basketball Stars"class="game-card">
+        <img src="../library/games/Basketball Stars/thumbnail.png">
+        <div class="title">Basketball Stars</div>
+    </div>
+    <div id="Big Tower Tiny Square 2"class="game-card">
+        <img src="../library/games/Big Tower Tiny Square 2/thumbnail.png">
+        <div class="title">Big Tower Tiny Square 2</div>
+    </div>
+    <div id="Bitlife"class="game-card">
+        <img src="../library/games/Bitlife/thumbnail.png">
+        <div class="title">Bitlife</div>
+    </div>
+    <div id="Block Blast"class="game-card">
+        <img src="../library/games/Block Blast/thumbnail.png">
+        <div class="title">Block Blast</div>
+    </div>
+    <div id="Bloons TD 5"class="game-card">
+        <img src="../library/games/Bloons TD 5/thumbnail.png">
+        <div class="title">Bloons TD 5</div>
+    </div>
+    <div id="Bloxorz"class="game-card">
+        <img src="../library/games/Bloxorz/thumbnail.png">
+        <div class="title">Bloxorz</div>
+    </div>
+    <div id="Brotato"class="game-card">
+        <img src="../library/games/Brotato/thumbnail.png">
+        <div class="title">Brotato</div>
+    </div>
+    <div id="Car Drawing"class="game-card">
+        <img src="../library/games/Car Drawing/thumbnail.png">
+        <div class="title">Car Drawing</div>
+    </div>
+    <div id="Chrome Dino Run"class="game-card">
+        <img src="../library/games/Chrome Dino Run/thumbnail.png">
+        <div class="title">Chrome Dino Run</div>
+    </div>
+    <div id="Circl0 2"class="game-card">
+        <img src="../library/games/Circl0 2/thumbnail.png">
+        <div class="title">Circl0 2</div>
+    </div>
+    <div id="Cluster Rush"class="game-card">
+        <img src="../library/games/Cluster Rush/thumbnail.png">
+        <div class="title">Cluster Rush</div>
+    </div>
+    <div id="Cookie Clicker"class="game-card">
+        <img src="../library/games/Cookie Clicker/thumbnail.png">
+        <div class="title">Cookie Clicker</div>
+    </div>
+    <div id="Count Masters: Stickman Games"class="game-card">
+        <img src="../library/games/Count Masters: Stickman Games/thumbnail.png">
+        <div class="title">Count Masters: Stickman Games</div>
+    </div>
+    <div id="Crazy Cattle 3D"class="game-card">
+        <img src="../library/games/Crazy Cattle 3D/thumbnail.png">
+        <div class="title">Crazy Cattle 3D</div>
+    </div>
+    <div id="Crossy Road"class="game-card">
+        <img src="../library/games/Crossy Road/thumbnail.png">
+        <div class="title">Crossy Road</div>
+    </div>
+    <div id="Cut the Rope"class="game-card">
+        <img src="../library/games/Cut the Rope/thumbnail.png">
+        <div class="title">Cut the Rope</div>
+    </div>
+    <div id="Dance of Fire and Ice"class="game-card">
+        <img src="../library/games/Dance of Fire and Ice/thumbnail.png">
+        <div class="title">Dance of Fire and Ice</div>
+    </div>
+    <div id="Death Run 3D"class="game-card">
+        <img src="../library/games/Death Run 3D/thumbnail.png">
+        <div class="title">Death Run 3D</div>
+    </div>
+    <div id="Dreadhead Parkour"class="game-card">
+        <img src="../library/games/Dreadhead Parkour/thumbnail.png">
+        <div class="title">Dreadhead Parkour</div>
+    </div>
+    <div id="Drift Boss"class="game-card">
+        <img src="../library/games/Drift Boss/thumbnail.png">
+        <div class="title">Drift Boss</div>
+    </div>
+    <div id="Drift Hunters"class="game-card">
+        <img src="../library/games/Drift Hunters/thumbnail.png">
+        <div class="title">Drift Hunters</div>
+    </div>
+    <div id="Drive Mad"class="game-card">
+        <img src="../library/games/Drive Mad/thumbnail.png">
+        <div class="title">Drive Mad</div>
+    </div>
+    <div id="Duck Life 5"class="game-card">
+        <img src="../library/games/Duck Life 5/thumbnail.png">
+        <div class="title">Duck Life 5</div>
+    </div>
+    <div id="Eaglercraft"class="game-card">
+        <img src="../library/games/Eaglercraft/thumbnail.png">
+        <div class="title">Eaglercraft</div>
+    </div>
+    <div id="Earn to Die"class="game-card">
+        <img src="../library/games/Earn to Die/thumbnail.png">
+        <div class="title">Earn to Die</div>
+    </div>
+    <div id="Factory Balls"class="game-card">
+        <img src="../library/games/Factory Balls/thumbnail.png">
+        <div class="title">Factory Balls</div>
+    </div>
+    <div id="Five Nights at Epsteins"class="game-card">
+        <img src="../library/games/Five Nights at Epsteins/thumbnail.png">
+        <div class="title">Five Nights at Epsteins</div>
+    </div>
+    <div id="Five Nights at Freddies"class="game-card">
+        <img src="../library/games/Five Nights at Freddies/thumbnail.png">
+        <div class="title">Five Nights at Freddies</div>
+    </div>
+    <div id="Five Nights at Freddies 2"class="game-card">
+        <img src="../library/games/Five Nights at Freddies 2/thumbnail.png">
+        <div class="title">Five Nights at Freddies 2</div>
+    </div>
+    <div id="Five Nights at Freddies 3"class="game-card">
+        <img src="../library/games/Five Nights at Freddies 3/thumbnail.png">
+        <div class="title">Five Nights at Freddies 3</div>
+    </div>
+    <div id="Five Nights at Freddies 4"class="game-card">
+        <img src="../library/games/Five Nights at Freddies 4/thumbnail.png">
+        <div class="title">Five Nights at Freddies 4</div>
+    </div>
+    <div id="Flappy Bird"class="game-card">
+        <img src="../library/games/Flappy Bird/thumbnail.png">
+        <div class="title">Flappy Bird</div>
+    </div>
+    <div id="Football Legends"class="game-card">
+        <img src="../library/games/Football Legends/thumbnail.png">
+        <div class="title">Football Legends</div>
+    </div>
+    <div id="Free Rider"class="game-card">
+        <img src="../library/games/Free Rider/thumbnail.png">
+        <div class="title">Free Rider</div>
+    </div>
+    <div id="Free Rider 2"class="game-card">
+        <img src="../library/games/Free Rider 2/thumbnail.png">
+        <div class="title">Free Rider 2</div>
+    </div>
+    <div id="Friday Night Funkin"class="game-card">
+        <img src="../library/games/Friday Night Funkin/thumbnail.png">
+        <div class="title">Friday Night Funkin</div>
+    </div>
+    <div id="Friday Night Funkin VS Agoti"class="game-card">
+        <img src="../library/games/Friday Night Funkin VS Agoti/thumbnail.png">
+        <div class="title">Friday Night Funkin VS Agoti</div>
+    </div>
+    <div id="Fruit Ninja"class="game-card">
+        <img src="../library/games/Fruit Ninja/thumbnail.png">
+        <div class="title">Fruit Ninja</div>
+    </div>
+    <div id="Geometry Dash: Subzero"class="game-card">
+        <img src="../library/games/Geometry Dash: Subzero/thumbnail.png">
+        <div class="title">Geometry Dash: Subzero</div>
+    </div>
+    <div id="Geometry Dash: World"class="game-card">
+        <img src="../library/games/Geometry Dash: World/thumbnail.png">
+        <div class="title">Geometry Dash: World</div>
+    </div>
+    <div id="Getaway Shootout"class="game-card">
+        <img src="../library/games/Getaway Shootout/thumbnail.png">
+        <div class="title">Getaway Shootout</div>
+    </div>
+    <div id="Gimme the Airpod"class="game-card">
+        <img src="../library/games/Gimme the Airpod/thumbnail.png">
+        <div class="title">Gimme the Airpod</div>
+    </div>
+    <div id="Going Balls"class="game-card">
+        <img src="../library/games/Going Balls/thumbnail.png">
+        <div class="title">Going Balls</div>
+    </div>
+    <div id="Gun Mayhem"class="game-card">
+        <img src="../library/games/Gun Mayhem/thumbnail.png">
+        <div class="title">Gun Mayhem</div>
+    </div>
+    <div id="Gun Mayhem 2"class="game-card">
+        <img src="../library/games/Gun Mayhem 2/thumbnail.png">
+        <div class="title">Gun Mayhem 2</div>
+    </div>
+    <div id="Happy Wheels"class="game-card">
+        <img src="../library/games/Happy Wheels/thumbnail.png">
+        <div class="title">Happy Wheels</div>
+    </div>
+    <div id="Helix Jump"class="game-card">
+        <img src="../library/games/Helix Jump/thumbnail.png">
+        <div class="title">Helix Jump</div>
+    </div>
+    <div id="Idle Breakout"class="game-card">
+        <img src="../library/games/Idle Breakout/thumbnail.png">
+        <div class="title">Idle Breakout</div>
+    </div>
+    <div id="Idle Dice"class="game-card">
+        <img src="../library/games/Idle Dice/thumbnail.png">
+        <div class="title">Idle Dice</div>
+    </div>
+    <div id="Idle Mining Empire"class="game-card">
+        <img src="../library/games/Idle Mining Empire/thumbnail.png">
+        <div class="title">Idle Mining Empire</div>
+    </div>
+    <div id="Moto X3M"class="game-card">
+        <img src="../library/games/Moto X3M/thumbnail.png">
+        <div class="title">Moto X3M</div>
+    </div>
+    <div id="Moto X3M Winter"class="game-card">
+        <img src="../library/games/Moto X3M Winter/thumbnail.png">
+        <div class="title">Moto X3M Winter</div>
+    </div>
+    <div id="Opposite Day"class="game-card">
+        <img src="../library/games/Opposite Day/thumbnail.png">
+        <div class="title">Opposite Day</div>
+    </div>
+    <div id="OvO"class="game-card">
+        <img src="../library/games/OvO/thumbnail.png">
+        <div class="title">OvO</div>
+    </div>
+    <div id="Pacman"class="game-card">
+        <img src="../library/games/Pacman/thumbnail.png">
+        <div class="title">Pacman</div>
+    </div>
+    <div id="Papas Pizzeria"class="game-card">
+        <img src="../library/games/Papas Pizzeria/thumbnail.png">
+        <div class="title">Papas Pizzeria</div>
+    </div>
+    <div id="paper.io 2"class="game-card">
+        <img src="../library/games/paper.io 2/thumbnail.png">
+        <div class="title">paper.io 2</div>
+    </div>
+    <div id="Parking Fury"class="game-card">
+        <img src="../library/games/Parking Fury/thumbnail.png">
+        <div class="title">Parking Fury</div>
+    </div>
+    <div id="Parking Fury 2"class="game-card">
+        <img src="../library/games/Parking Fury 2/thumbnail.png">
+        <div class="title">Parking Fury 2</div>
+    </div>
+    <div id="Ping Pong Chaos"class="game-card">
+        <img src="../library/games/Ping Pong Chaos/thumbnail.png">
+        <div class="title">Ping Pong Chaos</div>
+    </div>
+    <div id="Plinko"class="game-card">
+        <img src="../library/games/Plinko/thumbnail.png">
+        <div class="title">Plinko</div>
+    </div>
+    <div id="Polytrack"class="game-card">
+        <img src="../library/games/Polytrack/thumbnail.png">
+        <div class="title">Polytrack</div>
+    </div>
+    <div id="QWOP"class="game-card">
+        <img src="../library/games/QWOP/thumbnail.png">
+        <div class="title">QWOP</div>
+    </div>
+    <div id="Retro Bowl"class="game-card">
+        <img src="../library/games/Retro Bowl/thumbnail.png">
+        <div class="title">Retro Bowl</div>
+    </div>
+    <div id="Retro Bowl College"class="game-card">
+        <img src="../library/games/Retro Bowl College/thumbnail.png">
+        <div class="title">Retro Bowl College</div>
+    </div>
+    <div id="Rooftop Snipers"class="game-card">
+        <img src="../library/games/Rooftop Snipers/thumbnail.png">
+        <div class="title">Rooftop Snipers</div>
+    </div>
+    <div id="Rooftop Snipers 2"class="game-card">
+        <img src="../library/games/Rooftop Snipers 2/thumbnail.png">
+        <div class="title">Rooftop Snipers 2</div>
+    </div>
+    <div id="Run 3"class="game-card">
+        <img src="../library/games/Run 3/thumbnail.png">
+        <div class="title">Run 3</div>
+    </div>
+    <div id="Schoolboy Runaway"class="game-card">
+        <img src="../library/games/Schoolboy Runaway/thumbnail.png">
+        <div class="title">Schoolboy Runaway</div>
+    </div>
+    <div id="Short Life"class="game-card">
+        <img src="../library/games/Short Life/thumbnail.png">
+        <div class="title">Short Life</div>
+    </div>
+    <div id="Slice it All 3D"class="game-card">
+        <img src="../library/games/Slice it All 3D/thumbnail.png">
+        <div class="title">Slice it All 3D</div>
+    </div>
+    <div id="Slope"class="game-card">
+        <img src="../library/games/Slope/thumbnail.png">
+        <div class="title">Slope</div>
+    </div>
+    <div id="Slope 2"class="game-card">
+        <img src="../library/games/Slope 2/thumbnail.png">
+        <div class="title">Slope 2</div>
+    </div>
+    <div id="Slope 3"class="game-card">
+        <img src="../library/games/Slope 3/thumbnail.png">
+        <div class="title">Slope 3</div>
+    </div>
+    <div id="Snow Rider 3D"class="game-card">
+        <img src="../library/games/Snow Rider 3D/thumbnail.png">
+        <div class="title">Snow Rider 3D</div>
+    </div>
+    <div id="Soccer Random"class="game-card">
+        <img src="../library/games/Soccer Random/thumbnail.png">
+        <div class="title">Soccer Random</div>
+    </div>
+    <div id="Solar Smash"class="game-card">
+        <img src="../library/games/Solar Smash/thumbnail.png">
+        <div class="title">Solar Smash</div>
+    </div>
+    <div id="Solitaire"class="game-card">
+        <img src="../library/games/Solitaire/thumbnail.png">
+        <div class="title">Solitaire</div>
+    </div>
+    <div id="Stick Duels - The War"class="game-card">
+        <img src="../library/games/Stick Duels - The War/thumbnail.png">
+        <div class="title">Stick Duels - The War</div>
+    </div>
+    <div id="Stick Merge"class="game-card">
+        <img src="../library/games/Stick Merge/thumbnail.png">
+        <div class="title">Stick Merge</div>
+    </div>
+    <div id="Stickman Hook"class="game-card">
+        <img src="../library/games/Stickman Hook/thumbnail.png">
+        <div class="title">Stickman Hook</div>
+    </div>
+    <div id="Subway Surfers"class="game-card">
+        <img src="../library/games/Subway Surfers/thumbnail.png">
+        <div class="title">Subway Surfers</div>
+    </div>
+    <div id="Super Car Rush"class="game-card">
+        <img src="../library/games/Super Car Rush/thumbnail.png">
+        <div class="title">Super Car Rush</div>
+    </div>
+    <div id="Super Mario 63 Redux"class="game-card">
+        <img src="../library/games/Super Mario 63 Redux/thumbnail.png">
+        <div class="title">Super Mario 63 Redux</div>
+    </div>
+    <div id="Super Smash Flash"class="game-card">
+        <img src="../library/games/Super Smash Flash/thumbnail.png">
+        <div class="title">Super Smash Flash</div>
+    </div>
+    <div id="Tank Trouble"class="game-card">
+        <img src="../library/games/Tank Trouble/thumbnail.png">
+        <div class="title">Tank Trouble</div>
+    </div>
+    <div id="Temple Run 2"class="game-card">
+        <img src="../library/games/Temple Run 2/thumbnail.png">
+        <div class="title">Temple Run 2</div>
+    </div>
+    <div id="The Impossible Quiz"class="game-card">
+        <img src="../library/games/The Impossible Quiz/thumbnail.png">
+        <div class="title">The Impossible Quiz</div>
+    </div>
+    <div id="There is no Game"class="game-card">
+        <img src="../library/games/There is no Game/thumbnail.png">
+        <div class="title">There is no Game</div>
+    </div>
+    <div id="Time Shooter 2"class="game-card">
+        <img src="../library/games/Time Shooter 2/thumbnail.png">
+        <div class="title">Time Shooter 2</div>
+    </div>
+    <div id="Time Shooter 3"class="game-card">
+        <img src="../library/games/Time Shooter 3/thumbnail.png">
+        <div class="title">Time Shooter 3</div>
+    </div>
+    <div id="Tunnel Rush"class="game-card">
+        <img src="../library/games/Tunnel Rush/thumbnail.png">
+        <div class="title">Tunnel Rush</div>
+    </div>
+    <div id="Vex 3"class="game-card">
+        <img src="../library/games/Vex 3/thumbnail.png">
+        <div class="title">Vex 3</div>
+    </div>
+    <div id="Volley Random"class="game-card">
+        <img src="../library/games/Volley Random/thumbnail.png">
+        <div class="title">Volley Random</div>
+    </div>
+    <div id="Wordle"class="game-card">
+        <img src="../library/games/Wordle/thumbnail.png">
+        <div class="title">Wordle</div>
+    </div>
+    <div id="Worlds Hardest Game"class="game-card">
+        <img src="../library/games/Worlds Hardest Game/thumbnail.png">
+        <div class="title">Worlds Hardest Game</div>
+    </div>
+    <div id="Worlds Hardest Game 2"class="game-card">
+        <img src="../library/games/Worlds Hardest Game 2/thumbnail.png">
+        <div class="title">Worlds Hardest Game 2</div>
+    </div>
+    <div id="You vs 100 Skibidi Toilets"class="game-card">
+        <img src="../library/games/You vs 100 Skibidi Toilets/thumbnail.png">
+        <div class="title">You vs 100 Skibidi Toilets</div>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+});
+
+const particles = [];
+
+for (let i = 0; i < 80; i++) {
+    particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.8,
+        dy: (Math.random() - 0.5) * 0.8
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,w,h);
+
+    for (let p of particles) {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > w) p.dx *= -1;
+        if (p.y < 0 || p.y > h) p.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.fill();
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+const homeBtn=document.getElementById("home");
+const gameBtn=document.getElementById("games");
+const navBar=document.getElementById("navBar");
+const navTitle=document.getElementById("navTitle");
+const gameCards=document.querySelectorAll(".game-card");
+
+function update(){
+    if(navBar.offsetWidth<=775){
+        navTitle.style.display="none";
+    }else{
+        navTitle.style.display="flex";
+    }
+}
+update();
+
+gameCards.forEach(card => {
+    card.addEventListener("click",()=>{
+        window.location.href=`../play?game=${card.id}`;
+    })
+});
+
+window.addEventListener("resize",update);
+
+homeBtn.addEventListener("click",()=>{
+    window.location.href=("../");
+});
+gameBtn.addEventListener("click",()=>{
+    window.location.href=("../games");
+});
+</script>
+
+</body>
+</html>

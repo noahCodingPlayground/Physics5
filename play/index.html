@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play now - Physics5</title>
+    <link rel="icon" href="../resources/main1.png">
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <style>
+        body{
+            font-family: system-ui;
+            align-items: center;
+            flex-direction: column;
+            display: flex;
+            margin:0;
+            overflow:hidden;
+            background: #0f0f12;
+        }
+        canvas{
+            position:fixed;
+            top:0;
+            left:0;
+            z-index:-1;
+        }
+        .nav-bar{
+            margin-top: 15px;
+            width:50%;
+            min-width: 350px;
+            background-color: rgba(25,25,25,0.6);
+            border-radius: 8px;
+            height:6vh;
+            min-height: 45px;
+            max-height: 200px;
+            display:flex;
+            border:1px solid rgba(31, 255, 105, 0.5);
+        }
+        .nav-bar .title{
+            color:rgb(235,235,235);
+            font-size: 25px;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            height:100%;
+            font-family: monospace;
+            left:50%;
+            position:relative;
+            transform:translateX(-50%);
+        }
+        .nav-bar img{
+            height:90%;
+            aspect-ratio: 1/1;
+            left:0%;
+            position:relative;
+            justify-content: center;
+            align-items: center;
+            margin-left:5px;
+            margin-top: 5px;
+        }
+        .nav-bar .btn-container{
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap:8px;
+            margin-right: 15px;
+            margin-left:auto;
+            box-sizing: border-box;
+            position:relative;
+            width:40%;
+            height: 100%;
+        }
+        .nav-btn{
+            height:55%;
+            color:rgb(235,235,235);
+            background-color: rgb(35,35,35);
+            width:125px;
+            font-family: monospace;
+            font-size: 20px;
+            align-items: center;
+            justify-content: center;
+            display:flex;
+            border-radius: 5px;
+            transition: 0.25s ease;
+            border:1px solid rgba(0,0,0,0)
+        }
+        .nav-btn:hover{
+            color:rgb(60, 218, 81);
+            border-color: rgba(59, 219, 80, 0.5);
+        }
+        h1{
+            font-size: 25px;
+            color:rgb(215,215,215);
+            font-family: monospace;
+            justify-content: left;
+            align-items: center;
+            margin-left: 15px;
+        }
+        .card-main{
+            width:100%;
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+            gap:20px;
+            margin-top:10px;
+        }
+        .card-box{
+            gap:5px;
+            display:flex;
+            width:250px;
+            height:1%;
+            background-color: rgba(35,35,35,0.7);
+            border-radius: 8px;
+            border:1px solid rgba(46, 218, 69, 0.3);
+            flex-direction: column;
+            padding-bottom:15px;
+            margin-right:10px;
+        }
+        .card-container{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:10px;
+            flex-direction: column;
+            width:100%;
+        }
+        .game-card{
+            width: 60%;
+            aspect-ratio: 1/1;
+            border-radius: 2px;
+            background-color: rgb(35,35,35);
+            transition: 0.25s ease;
+            will-change: transform;
+            border:1px solid rgba(0,0,0,0);
+            position:relative;
+        }
+        .game-card img{
+            object-fit: cover;
+            width:100%;
+            height:100%;
+            box-sizing: border-box;
+            position:absolute;
+            border-radius: 2px;
+        }
+        .game-card .title{
+            width:100%;
+            padding:10px;
+            background-color: rgba(25,25,25,0.5);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            position:absolute;
+            opacity: 1;
+            color:rgb(235,235,235);
+            object-fit: cover;
+            box-sizing: border-box;
+            opacity:0;
+            transition:0.25s ease;
+            bottom:0;
+            font-size: 15px;
+        }
+        .game-card:hover{
+            transform:scale(1.02);
+            border-color:rgba(31, 255, 105, 0.8);
+        }
+        .game-card:hover .title{
+            opacity:1;
+        }
+        .game-container{
+            display:flex;
+            flex-direction: column;
+            gap:10px;
+        }
+        .game-display{
+            width:850px;
+            min-height:500px;
+            background-color: rgba(35,35,35,0.7);
+            border-radius: 8px;
+            border:1px solid rgba(46, 218, 69, 0.3);
+            margin-left: 10px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:white;
+            font-family:monospace;
+            font-size:25px;
+            overflow:hidden;
+        }
+        .fullscreen-btn{
+            width:35px;
+            height:35px;
+            background-color: rgba(30,30,30,0.5);
+            border:1px solid rgb(165,165,165);
+            border-radius:5px;
+            justify-content: center;
+            align-items: center;
+            display:flex;
+            transition:0.25s ease;
+            will-change:contents;
+            align-self: flex-end;
+        }
+        .fullscreen-btn:hover{
+            transform:scale(1.03);
+            border-color: rgba(31, 255, 105, 0.5);
+        }
+        .fullscreen-btn img{
+            object-fit: cover;
+            height:100%;
+            width:100%;
+            border-radius:5px;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div id="navBar"class="nav-bar">
+    <img src="../resources/main1.png">
+    <div id="navTitle"class="title">Physics5</div>
+    <div class="btn-container">
+        <div id="home"class="nav-btn">Home</div>
+        <div id="games"class="nav-btn">Games</div>
+    </div>
+</div>
+<div class="card-main">
+    <div class="game-container">
+        <iframe id="display"class="game-display"></iframe>
+        <div id="maximize"class="fullscreen-btn">
+            <img src="../resources/maximize.png">
+        </div>
+    </div>
+    <div class="card-box">
+        <h1>Play more</h1>
+        <div class="card-container">
+            <a class="game-card" id="60 Seconds Burger Run">
+                <img src="../library/games/60 Seconds Burger Run/thumbnail.png">
+                <div class="title">60 Seconds Burger Run</div>
+            </a>
+            <a class="game-card" id="Bad Ice Cream">
+                <img src="../library/games/Bad Ice Cream/thumbnail.png">
+                <div class="title">Bad Ice Cream</div>
+            </a>
+            <a class="game-card" id="Brotato">
+                <img src="../library/games/Brotato/thumbnail.png">
+                <div class="title">Brotato</div>
+            </a>
+            <a class="game-card" id="Five Nights at Freddies">
+                <img src="../library/games/Five Nights at Freddies/thumbnail.png">
+                <div class="title">Five Nights at Freddies</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const display=document.getElementById("display");
+    const maximize=document.getElementById("maximize");
+    const gameParams=new URLSearchParams(window.location.search);
+    const game=gameParams.get("game");
+
+    maximize.addEventListener("click", () => {
+        display.requestFullscreen();
+    });
+
+    gamePath=`../library/games/${game}/game.html`;
+    display.src=gamePath;
+</script>
+
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+});
+
+const particles = [];
+
+for (let i = 0; i < 80; i++) {
+    particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.8,
+        dy: (Math.random() - 0.5) * 0.8
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,w,h);
+
+    for (let p of particles) {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > w) p.dx *= -1;
+        if (p.y < 0 || p.y > h) p.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.fill();
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+const homeBtn=document.getElementById("home");
+const gameBtn=document.getElementById("games");
+const navBar=document.getElementById("navBar");
+const navTitle=document.getElementById("navTitle");
+const gameCards=document.querySelectorAll(".game-card");
+
+function update(){
+    if(navBar.offsetWidth<=775){
+        navTitle.style.display="none";
+    }else{
+        navTitle.style.display="flex";
+    }
+}
+update();
+
+gameCards.forEach(card => {
+    card.addEventListener("click",()=>{
+        window.location.href=`../play?game=${card.id}`;
+    })
+});
+
+window.addEventListener("resize",update);
+
+homeBtn.addEventListener("click",()=>{
+    window.location.href=("../");
+});
+gameBtn.addEventListener("click",()=>{
+    window.location.href=("../games");
+});
+</script>
+
+</body>
+</html>
